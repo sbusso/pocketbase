@@ -84,7 +84,7 @@
                     });
 
                 // alternatively you can also fetch all records at once via getFullList:
-                client.Records.getFullList("${collection?.name}", 200 /* batch size */);
+                client.Records.getFullList("${collection?.name}", 200 /* batch size */)
                     .then(function (records) {
                         // success...
                     }).catch(function (error) {
@@ -203,7 +203,8 @@
                 />
                 Supports up to 6-levels depth nested relations expansion. <br />
                 The expanded relations will be appended to each individual record under the
-                <code>@expand</code> property (eg. <code>{`"@expand": {"rel1": {...}, ...}`}</code>).
+                <code>@expand</code> property (eg. <code>{`"@expand": {"rel1": {...}, ...}`}</code>). Only the
+                relations that the user has permissions to <strong>view</strong> will be expanded.
             </td>
         </tr>
     </tbody>

@@ -17,7 +17,7 @@ import (
 var _ core.App = (*PocketBase)(nil)
 
 // Version of PocketBase
-const Version = "0.1.0"
+var Version = "(untracked)"
 
 // appWrapper serves as a private core.App instance wrapper.
 type appWrapper struct {
@@ -73,10 +73,15 @@ func New() *PocketBase {
 
 	pb := &PocketBase{
 		RootCmd: &cobra.Command{
-			Use:   "pocketbase",
-			Short: "PocketBase CLI",
+			Use:     "pocketbase",
+			Short:   "PocketBase CLI",
+			Version: Version,
 			FParseErrWhitelist: cobra.FParseErrWhitelist{
 				UnknownFlags: true,
+			},
+			// no need to provide the default cobra completion command
+			CompletionOptions: cobra.CompletionOptions{
+				DisableDefaultCmd: true,
 			},
 		},
 		defaultDebug:         withGoRun,
@@ -84,9 +89,6 @@ func New() *PocketBase {
 		defaultEncryptionEnv: "",
 		showStartBanner:      true,
 	}
-
-	// no need to provide the default cobra completion command
-	pb.RootCmd.CompletionOptions.DisableDefaultCmd = true
 
 	// parse base flags
 	// (errors are ignored, since the full flags parsing happens on Execute())
@@ -130,7 +132,6 @@ func (pb *PocketBase) ShowStartBanner(val bool) *PocketBase {
 func (pb *PocketBase) Start() error {
 	// register system commands
 	pb.RootCmd.AddCommand(cmd.NewServeCommand(pb, pb.showStartBanner))
-	pb.RootCmd.AddCommand(cmd.NewVersionCommand(pb, Version))
 	pb.RootCmd.AddCommand(cmd.NewMigrateCommand(pb))
 
 	return pb.Execute()
